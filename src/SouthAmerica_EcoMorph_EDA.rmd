@@ -1,0 +1,52 @@
+---
+title: "SouthAmerica_EcoMorph_EDA"
+author: "Lumila"
+date: "26 Juli 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Reading and cleaning data
+
+```{r}
+# read the data
+X <- read.csv2("C:/Users/lmenendez/Desktop/SouthAmerica_EcoMorph/data/Variables completas analisis SAM.csv")
+# view the table
+View(X)
+# summary
+class(X)
+summary(X)
+```
+
+## SpatialPointDataFrame
+
+```{r}
+# load library
+library(sp)
+library(maptools)
+# convert to SpatialPointDataFrame
+spX <- X
+coordinates(spX) <- cbind(spX$Longitud, spX$Latitud)
+proj4string(spX) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+class(spX)
+summary(spX)
+```
+
+## Exploratory Data Analysis
+
+```{r}
+library(ggplot2)
+library(ggmap)
+# map
+ggplot(data=X, aes(x=Longitud, y=Latitud)) + geom_point(aes(color=FTC)) + coord_fixed(ratio=1) + theme_bw() + xlab("lon") + ylab("lat") + ggtitle("Fig.1")
+## + scale_color_gradient2(midpoint=0)
+# lm (fshape~altitude)
+ggplot(data=X, aes(x=FSHAPE, y=ALTITUDE, size=ESTC)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("altitude") + ggtitle("Fig.2")
+# lm (fshape~tempmed)
+ggplot(data=X, aes(x=FSHAPE, y=TEMPMED)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("temp med") + ggtitle("Fig.3")
+```
+
+Positive correlation altitude~facial shape!
