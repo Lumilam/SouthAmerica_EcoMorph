@@ -3,9 +3,17 @@ SouthAmerica_EcoMorph
 
 ## Research Question
 
+DONE
+
++ diet ~ morphology
++ morphology ~ temp/altitude
++ 
+
+TODO
+
 1) Altitute is positive correlated with facial shape, but facial shape is not correlated with temperature. Why and Where?
 
-2)
+2) Spatail autocorrelation between fshape~altitude and CI/C13?
 
 ## Data
 

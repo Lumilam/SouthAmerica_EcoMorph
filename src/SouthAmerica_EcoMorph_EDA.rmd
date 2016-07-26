@@ -50,3 +50,12 @@ ggplot(data=X, aes(x=FSHAPE, y=TEMPMED)) + geom_point() + geom_smooth(method="lm
 ```
 
 Positive correlation altitude~facial shape!
+
+```{r}
+library(rgl)
+# 3d plot
+## todo: color by altitude
+alt <- spX$ALTITUDE
+plot3d(spX$Longitud, spX$Latitud, spX$ALTITUDE, type = "s", col=rainbow(n=12))
+```
+
