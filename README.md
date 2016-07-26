@@ -18,6 +18,7 @@ Morphological data:
 + FSHAPE: facial shape
 + FTC: facial size
 + FFORM: facial form
++ ESTC: entire skull size
 
 Enviromental data:
 
