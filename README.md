@@ -16,7 +16,8 @@ Morphological data collected by L.Menendez, Enviromental data collected from ?. 
 Morphological data:
 
 + FSHAPE: facial shape
-+ 
++ FTC: facial size
++ FFORM: facial form
 
 Enviromental data:
 
