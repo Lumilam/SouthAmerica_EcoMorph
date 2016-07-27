@@ -19,6 +19,14 @@ View(X)
 # summary
 class(X)
 summary(X)
+# rename "Longitud" and "Latitud"
+names(X)[2] <- "lat"
+names(X)[3] <- "lon"
+```
+
+```{r}
+# Köppen data
+## http://hanschen.org/koppen/
 ```
 
 ## SpatialPointDataFrame
@@ -29,7 +37,7 @@ library(sp)
 library(maptools)
 # convert to SpatialPointDataFrame
 spX <- X
-coordinates(spX) <- cbind(spX$Longitud, spX$Latitud)
+coordinates(spX) <- cbind(spX$lon, spX$lat)
 proj4string(spX) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 class(spX)
 summary(spX)
@@ -40,13 +48,20 @@ summary(spX)
 ```{r}
 library(ggplot2)
 library(ggmap)
-# map
-ggplot(data=X, aes(x=Longitud, y=Latitud)) + geom_point(aes(color=FTC)) + coord_fixed(ratio=1) + theme_bw() + xlab("lon") + ylab("lat") + ggtitle("Fig.1")
-## + scale_color_gradient2(midpoint=0)
+library(mapproj)
+library(RColorBrewer)
+# map (terrain~fshape)
+argentina <- get_map(location="Argentina", zoom=4, maptype="terrain")
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FSHAPE), alpha=.8, size=6) + scale_color_gradient2(midpoint=0) #+ geom_text(data=X, aes(label=GRUPO), hjust=-.5, size=3) + ggtitle("Fig.1")
+
 # lm (fshape~altitude)
 ggplot(data=X, aes(x=FSHAPE, y=ALTITUDE, size=ESTC)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("altitude") + ggtitle("Fig.2")
+
 # lm (fshape~tempmed)
 ggplot(data=X, aes(x=FSHAPE, y=TEMPMED)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("temp med") + ggtitle("Fig.3")
+
+# lm (fshape~ci)
+ggplot(data=X, aes(x=FSHAPE, y=IC, color=ALTITUDE)) + scale_fill_brewer(palette="") + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("ci") + ggtitle("Fig.3")
 ```
 
 Positive correlation altitude~facial shape!

@@ -1,4 +1,20 @@
-.Rproj.user
+### R files
 .Rhistory
-.RData
-.Ruserdata
+#.Rdata
+*-Ex.R
+#.Rprofile
+
+### RStudio files
+*.Rproj
+.Rproj.user/
+.Rproj.user
+
+### Emacs backup
+*~
+
+### Large File Storage
+*.tif
+*.tiff
+
+### Ignore directory
+ignore/
