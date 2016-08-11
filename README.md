@@ -1,8 +1,5 @@
----
-title: "SouthAmerica_EcoMorph"
-author: "Lumila Menendez, Domenico Giusti"
-output: html_document
----
+SouthAmerica_EcoMorph
+=====================
 
 This repository contains a compendium of data (/data), source code (/src) and text (/doc) associated with the reproducible research project: "" authored by L. Menéndez and D. Giusti
 
