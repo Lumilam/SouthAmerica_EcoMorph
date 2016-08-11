@@ -1,40 +1,54 @@
 ---
-title: "SouthAmerica_EcoMorph_EDA"
-author: "Lumila"
-date: "26 Juli 2016"
+title: "SouthAmerica_EcoMorph"
+subtitle: "Exploratory Data Analysis"
+author: "Lumila Menendez, Domenico Giusti"
+#bibliography: "../doc/manuscript/SouthAmerica_EcoMorph.bib"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
 ```
+
+## Introduction
 
 ## Reading and cleaning data
 
-```{r}
-# read the data
-X <- read.csv2("C:/Users/lmenendez/Desktop/SouthAmerica_EcoMorph/data/Variables completas analisis SAM.csv")
+```{r, eval=TRUE, echo=FALSE, message=FALSE, results='hide'}
+# read the original data
+##X <- read.csv("C:/Users/lmenendez/Desktop/SouthAmerica_EcoMorph/data/Variables completas analisis SAM.csv", header=TRUE, sep=";", skip=0)
+##setwd("~/project/SouthAmerica_EcoMorph/")
+##write.csv(X, "data/X.csv")
+
+# read the imported table of data
+setwd("~/project/SouthAmerica_EcoMorph/")
+X <- read.csv("data/X.csv", header=TRUE, sep=",", skip=0)
+
 # view the table
 View(X)
+
 # summary
 class(X)
 summary(X)
+
 # rename "Longitud" and "Latitud"
-names(X)[2] <- "lat"
-names(X)[3] <- "lon"
+##names(X)[2] <- "lat"
+##names(X)[3] <- "lon"
 ```
 
-```{r}
+```{r, eval=FALSE, echo=FALSE, message=FALSE, results='hide'}
 # Köppen data
 ## http://hanschen.org/koppen/
 ```
 
 ## SpatialPointDataFrame
 
-```{r}
+```{r, eval=TRUE, echo=FALSE, message=FALSE, results='hide'}
 # load library
 library(sp)
 library(maptools)
+
 # convert to SpatialPointDataFrame
 spX <- X
 coordinates(spX) <- cbind(spX$lon, spX$lat)
@@ -45,14 +59,16 @@ summary(spX)
 
 ## Exploratory Data Analysis
 
-```{r}
+```{r, eval=TRUE, echo=TRUE, message=FALSE}
+# load library
 library(ggplot2)
 library(ggmap)
 library(mapproj)
 library(RColorBrewer)
+
 # map (terrain~fshape)
 argentina <- get_map(location="Argentina", zoom=4, maptype="terrain")
-ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FSHAPE), alpha=.8, size=6) + scale_color_gradient2(midpoint=0) #+ geom_text(data=X, aes(label=GRUPO), hjust=-.5, size=3) + ggtitle("Fig.1")
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FSHAPE), alpha=.8, size=6) + scale_color_gradient2(midpoint=0) #+ ggtitle("Fig.1") #+ geom_text(data=X, aes(label=GRUPO), hjust=-.5, size=3) 
 
 # lm (fshape~altitude)
 ggplot(data=X, aes(x=FSHAPE, y=ALTITUDE, size=ESTC)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("altitude") + ggtitle("Fig.2")
@@ -64,13 +80,16 @@ ggplot(data=X, aes(x=FSHAPE, y=TEMPMED)) + geom_point() + geom_smooth(method="lm
 ggplot(data=X, aes(x=FSHAPE, y=IC, color=ALTITUDE)) + scale_fill_brewer(palette="") + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("ci") + ggtitle("Fig.3")
 ```
 
-Positive correlation altitude~facial shape!
+The geographical distribution of the sample population is shown in Fig.1. The pattern of the facial shape values follows
 
-```{r}
+Fig.2 shows a strong positive correlation (`r cor(X$FSHAPE, X$ALTITUDE)`) between altitude and facial shape.
+
+```{r, eval=FALSE, echo=FALSE}
+# load library
 library(rgl)
+
 # 3d plot
 ## todo: color by altitude
-alt <- spX$ALTITUDE
 plot3d(spX$Longitud, spX$Latitud, spX$ALTITUDE, type = "s", col=rainbow(n=12))
 ```
 

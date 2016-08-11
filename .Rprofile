@@ -4,6 +4,9 @@
 ## exploratory data analysis
 library(xlsx)
 library(ggplot2)
+library(ggmap)
+library(mapproj)
+library(RColorBrewer)
 library(rgdal)
 library(maptools)
 library(broom)
