@@ -1,0 +1,108 @@
+---
+title: "SouthAmerica_EcoMorph"
+subtitle: "Spatial autocorrelation"
+author: "Lumila Menendez, Domenico Giusti"
+#bibliography: "../doc/manuscript/SouthAmerica_EcoMorph.bib"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Circular statistics commonly applied are global statistics. Till now, attempts to analyse local variation in the orientation of clasts/bones have followed a simplicistic selection of areas or subsets, mostly based on visual interpreations of the distribution.
+
+We are interested in the spatial variation of fabrics within the study area.
+
+> Spatial autocorrelation statistics measure and analyze the degree of dependency among observations in a geographic space. Classic spatial autocorrelation statistics include Moran's I {\displaystyle I} I, Geary's C {\displaystyle C} C, Getis's G {\displaystyle G} G. [...] These statistics require measuring a spatial weights matrix that reflects the intensity of the geographic relationship between observations in a neighborhood. [...] Classic spatial autocorrelation statistics compare the spatial weights to the covariance relationship at pairs of locations. Spatial autocorrelation that is more positive than expected from random indicate the clustering of similar values across geographic space, while significant negative spatial autocorrelation indicates that neighboring values are more dissimilar than expected by chance, suggesting a spatial pattern similar to a chess board. (https://en.wikipedia.org/wiki/Spatial_analysis#Spatial_autocorrelation)
+
+## Reading and subsetting data
+
+```{r, eval=TRUE, echo=FALSE, message=FALSE}
+library(spdep)
+library(sp)
+```
+
+### Class intervals
+
+```{r}
+# classIntervals provides a uniform interface to finding class intervals for continuous numerical variables. [...] Class intervals are non-overlapping, and the classes are left-closed.
+## http://cran.r-project.org/web/packages/classInt/classInt.pdf
+library(classInt)
+library(RColorBrewer)
+pal <- brewer.pal(3, "Blues")
+# fisher-jenks class distribution
+fj8 <- classIntervals(fabric$bearing, n=8, style="fisher")
+fj8
+plot(fj8, pal=pal)
+# rose quadrants class distribution
+r8 <- classIntervals(fabric$bearing, n=8, style="fixed", fixedBreaks=breaks.8)
+plot(r8, pal=pal)
+```
+
+```{r}
+coords <- coordinates(spX)
+id <- row.names(as(spX, "data.frame"))
+```
+
+
+```{r}
+# Nearest neighbour
+## k nearest neighbour
+X_kn1 <- knn2nb(knearneigh(coords, k=1), row.names=id)
+## nearest neighbour based on a specified distance
+dis <- unlist(nbdists(X_kn1, coords))
+summary(dis)
+X_kd1 <- dnearneigh(coords, d1=0, d2=.75*max(dis), row.names=id)
+## nearest neighbour by row distance
+X_nb75 <- dnearneigh(coords, d1=0, d2=75, row.names=id)
+### plot
+plot(spX)
+plot(X_kn1, coords, add=TRUE)
+```
+
+```{r}
+# Spatial weights
+## styles: W, B, C, U, S
+X_lw_W <- nb2listw(X_kn1, style="W")
+```
+
+
+## Global spatial autocorrelation
+
+> Global spatial autocorrelation is a measure of the overall clustering of the data. One of the statistics used to evaluate global spatial autocorrelation is Moran's I (https://en.wikipedia.org/wiki/Indicators_of_spatial_association)
+
+```{r}
+# global Moran scatterplot
+moran.plot(spX$ESFORM, listw=nb2listw(X_kn1, style="W"), labels=as.character(spX$GRUPO))
+```
+
+Points in the upper right (or high-high) and lower left (or low-low) quadrants indicate positive spatial association of values that are higher and lower than the sample mean, respectively. The lower right (or high-low) and upper left (or low-high) quadrants include observations that exhibit negative spatial association; that is, these observed values carry little similarity to their neighboring ones.
+
+```{r}
+# fig.2
+I <- moran.test(spX$ESFORM, listw=nb2listw(X_kn1, style="W"))
+I
+spI <- maptools::spCbind(spX, as.data.frame(I))
+# bubble plot
+bubble(spI, "Ii", fill=TRUE, col=c("grey","black"), main="Fig.2", xlab="Km East", ylab="Km North")
+# ggplot2
+ggmap(argentina) + geom_point(data=as.data.frame(spI), aes(x=lon, y=lat, colour=Ii, size=abs(Ii))) + scale_colour_gradient2(midpoint=0) + scale_radius() + theme_bw() + xlab("lon") + ylab("lat") + ggtitle("Moran'sI")
+```
+
+## Local spatial autocorrelation
+
+> Global spatial analysis or global spatial autocorrelation analysis yields only one statistic to summarize the whole study area. In other words, global analysis assumes homogeneity. If that assumption does not hold, then having only one statistic does not make sense as the statistic should differ over space. But if there is no global autocorrelation or no clustering, we can still find clusters at a local level using local spatial autocorrelation. The fact that Moran's I is a summation of individual crossproducts is exploited by the "Local indicators of spatial association" (LISA) to evaluate the clustering in those individual units by calculating Local Moran's I for each spatial unit and evaluating the statistical significance for each Ii (https://en.wikipedia.org/wiki/Indicators_of_spatial_association)
+
+```{r}
+# local Moran's I
+I <- spdep::localmoran(spX$ESFORM, listw=nb2listw(X_kn1, style="W"))
+##kable(I)
+
+# local Getis G
+G <- spdep::localG(spX$Date..AD., listw=nb2listw(X_nb75, style="W"))
+##kable(G)
+```
+

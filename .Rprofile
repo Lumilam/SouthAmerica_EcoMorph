@@ -12,6 +12,7 @@ library(maptools)
 library(broom)
 ## geostatistics
 library(sp)
+library(spdep)
 library(gstat)
 library(lattice)
 ## point pattern analysis

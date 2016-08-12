@@ -1,0 +1,45 @@
+---
+title: "SouthAmerica_EcoMorph"
+subtitle: "Variograms"
+author: "Lumila Menendez, Domenico Giusti"
+#bibliography: "../doc/manuscript/SouthAmerica_EcoMorph.bib"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estimating spatial correlation: the variogram
+
+```{r}
+# variogram
+## object:
+## cutoff: spatial separation distance up to which point pairs are included in semivariance estimates; as a default, the length of the diagonal of the box spanning the data is divided by three
+## width: the width of subsequent distance intervals into which data point pairs are grouped for semivariance estimates
+## alpha: direction in plane (x,y), in positive degrees clockwise from positive y (North): alpha=0 for direction North (increasing y), alpha=90 for direction East (increasing x); optional a vector of directions in (x,y)
+## beta: direction in z, in positive degrees up from the (x,y) plane
+
+# semivariogram cloud, obtained by plotting all possible squared differences of observation pairs (Z(s_i)-Z(s_j))^2 against their separation distance h_ij
+## object: in case of variogram.formula, formula defining the response vector and (possible) regressors, in case of absence of regressors, use e.g. z~1
+plot(variogram(object=ESFORM~1, data=spX, cloud=TRUE))
+plot(variogram(object=lat~ESFORM, data=spX, cloud=TRUE))
+
+# omnidirectional variogram
+plot(variogram(lat~lon, spX))
+
+# anisotropy ()
+plot(variogram(ESFORM~1, spX, alpha=c(0,45,90,135)))
+v.dir <- variogram(ESFORM~1, spX, alpha=c(0,45,90,135))
+v.anis <- vgm(0.6, "Sph", 3, 0.1, anis=c(45, 0.3))
+plot(v.dir, v.anis)
+
+# anisotropy ()
+plot(variogram(ESFORM~1, spX, alpha=c(0,90)))
+v.dir <- variogram(ESFORM~1, spX, alpha=c(0,90))
+v.Exp <- fit.variogram(v.dir, vgm(1, model="Exp", 300, 1), fit.method=1)
+plot(v.dir, v.Exp)
+
+# variogram map
+plot(variogram(lat~ESFORM, spX, map=TRUE, cutoff=3, width=.1))
+```

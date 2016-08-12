@@ -14,17 +14,20 @@ Points (lat,lon - WGS84) represent sites or populations.
 Morphological data:
 
 + ESTC: entire skull size
-+ ESFORM:
-+ ESSHAPE:
++ ESFORM: entire skull form (size + shape)
++ ESSHAPE: entire skull shape
+
 + FTC: facial size
 + FFORM: facial form
 + FSHAPE: facial shape
-+ BoTC:
-+ BoFORM:
-+ BoSHAPE:
-+ BaSTC:
-+ BaFORM:
-+ BaSHAPE:
+
++ BoTC: cranial vault size
++ BoFORM: cranial vault form
++ BoSHAPE: cranial vault shape
+
++ BaSTC: cranial base size
++ BaFORM: cranial base form
++ BaSHAPE: cranial base shape
 
 Dental data:
 

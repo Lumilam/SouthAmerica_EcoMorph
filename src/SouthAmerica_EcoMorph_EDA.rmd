@@ -66,9 +66,24 @@ library(ggmap)
 library(mapproj)
 library(RColorBrewer)
 
-# map (terrain~fshape)
+# map (lat~fshape)
 argentina <- get_map(location="Argentina", zoom=4, maptype="terrain")
 ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FSHAPE), alpha=.8, size=6) + scale_color_gradient2(midpoint=0) #+ ggtitle("Fig.1") #+ geom_text(data=X, aes(label=GRUPO), hjust=-.5, size=3) 
+
+# map (lat~fsize)
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FTC), alpha=.8, size=6)
+
+# map (lat~fform)
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=FFORM), alpha=.8, size=6) + scale_color_gradient2(midpoint=0) + ggtitle("Fig.1") + geom_text(data=X, aes(label=FFORM), hjust=-.5, size=3)
+
+# map (lat~estc)
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=ESTC), alpha=.8, size=6)
+
+# map (lat~esshape)
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=ESSHAPE), alpha=.8, size=6) + scale_color_gradient2(midpoint=0)
+
+# map (lat~esform)
+ggmap(argentina) + geom_point(data=X, aes(x=lon, y=lat, color=ESFORM), alpha=.8, size=6) + scale_color_gradient2(midpoint=0)
 
 # lm (fshape~altitude)
 ggplot(data=X, aes(x=FSHAPE, y=ALTITUDE, size=ESTC)) + geom_point() + geom_smooth(method="lm")+ theme_bw() + xlab("fshape") + ylab("altitude") + ggtitle("Fig.2")
