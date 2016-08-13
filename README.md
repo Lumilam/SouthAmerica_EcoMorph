@@ -1,7 +1,9 @@
 SouthAmerica_EcoMorph
 =====================
 
-## Research Question
+This repository contains a compendium of data (/data), source code (/src) and text (/doc) associated with the reproducible research project: "" authored by L. Menéndez and D. Giusti
+
+## Project description
 
 DONE
 
@@ -9,31 +11,30 @@ DONE
 + morphology ~ temp/altitude
 + 
 
-TODO
+Research Question
 
 1) Altitute is positive correlated with facial shape, but facial shape is not correlated with temperature. Why and Where?
 
 2) Spatail autocorrelation between fshape~altitude and CI/C13?
 
-## Data
+## Repository DOI
 
-Morphological data collected by L.Menendez, Enviromental data collected from ?. Temporal range: Late Holocene (3m - 500 BP). POints represent sites or populations.
+The files hosted at github.com are development versions. The compendium will be archived in [Zenodo](https://zenodo.org) once published.
 
-## Metadata
+## Repository authors
 
-Morphological data:
+L. Menéndez (lumilam@gmail.com)
 
-+ FSHAPE: facial shape
-+ FTC: facial size
-+ FFORM: facial form
-+ ESTC: entire skull size
+D. Giusti (domenico.giusti@uni-tuebingen.de)
 
-Enviromental data:
+## Licenses
 
-+ ALTITUDE
-+ TEMPMED
-+ TEMPMIN
-+ TEMPMAX
-+ PRECIPITATION
+Data: specified in the metadata files (data/metaX.md)
 
+Source code: MIT Copyright: (2016) Lumila Menéndez, Domenico Giusti
 
+Text: CC-BY-4.0 Copyright: (2016) Lumila Menéndez, Domenico Giusti
+
+## Session info
+
+`r sessionInfo()`
